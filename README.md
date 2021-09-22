@@ -83,11 +83,11 @@ operation, one can use the `cexpr^!` invocation like so:
 cexpr^!instance1.field1 += 2
 ```
 
-To simply the mechanics of `cexpr[T]^`, it is required on both sides of a binary
+To simplify the mechanics of `cexpr[T]^`, it is required on both sides of a binary
 operation if both sides are C/C++ expressions:
 
 ```nim
-cexpr[cint]^!instance1.field1 += cexpr[cint]^!instance1.field1
+cexpr[cint]^instance1.field1 += cexpr[cint]^instance1.field1
 
 cexpr^!instance1.field1 += cexpr[cint]^!instance1.field1 # same as above
 
