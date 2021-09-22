@@ -7,7 +7,7 @@ target: "c++"
 import ./tcinterop/contained
 import ./tcinterop/simple
 
-import ../exprs
+import cinterop
 
 block: # access value macro
   assert DEFINE1 == 1
