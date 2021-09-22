@@ -313,6 +313,7 @@ macro cexprImpl(code: untyped, Any: type, CAuto = CAuto): auto =
 # used to create an overload for the `^` operator so it does not conflict with
 # other modules
 type cexpr*[T] = distinct object
+type cauto* = distinct object
 
 template cexprType[T](Expr: type[cexpr[T]]): type[T] = T
 
@@ -331,7 +332,7 @@ template `^`*(Expr: type[cexpr], code: untyped{~nkStmtList}): auto =
 
     cexprImpl(code, Type)
 
-template `^!`*(Type: type[cexpr], code: untyped{~nkStmtList}): auto =
+template `^`*(Expr: type[cauto], code: untyped{~nkStmtList}): auto =
   cexprImpl(code, CAuto)
 
 # BUG: This macro does not allow `var` variables to be mutated

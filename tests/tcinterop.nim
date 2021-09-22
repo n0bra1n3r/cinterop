@@ -207,7 +207,7 @@ block: # access private field
   assert instance.field3Value == 3
 
 block: # access member of an enum
-  assert ord(cexpr^!CPP_ENUM.MEMBER_1) == 1
+  assert ord(cauto^CPP_ENUM.MEMBER_1) == 1
 
 block: # new and delete class instance
   let newInstance = cnew CppClass.init()
@@ -219,30 +219,30 @@ block: # new and delete class instance
 block: # allow comparison of `auto` with value
   let instance = CppClass.init()
 
-  assert cexpr^!instance.field1 == 1
+  assert cauto^instance.field1 == 1
 
 block: # allow comparison of `auto` with `auto`
   let instance = CppClass.init()
 
-  assert cexpr^!instance.field1 < cexpr^!instance.field2
+  assert cauto^instance.field1 < cauto^instance.field2
 
 block: # allow assignment of value to `auto`
   var instance = CppClass.init()
 
-  cexpr^!instance.field1 = 2
+  cauto^instance.field1 = 2
   assert cexpr[cint]^instance.field1 == 2
 
 block: # allow assignment of `auto` to `auto`
   var instance = CppClass.init()
 
-  cexpr^!instance.field1 = cexpr^!instance.field2
+  cauto^instance.field1 = cauto^instance.field2
   assert cexpr[cint]^instance.field1 == 2
 
 block: # perform unary operation on `auto`
   let instance = CppClass.init()
 
-  assert -(cexpr^!instance.field1) == -1
-  assert +(cexpr^!instance.field1) == +1
+  assert -(cauto^instance.field1) == -1
+  assert +(cauto^instance.field1) == +1
 
 when false:
   # BUG: These tests don't work because auto variables are not initialized in
@@ -251,12 +251,12 @@ when false:
   block: # allow storage of `auto` to temporary variable
     let instance = CppClass.init()
 
-    let value = cexpr^!instance.field2
+    let value = cauto^instance.field2
     assert value == 2
 
   block: # should mutate `cref` variable
     var instance = CppClass.init()
 
-    let value {.cref.} = cexpr^!instance.field1
-    cexpr^!instance.field1 = 2
+    let value {.cref.} = cauto^instance.field1
+    cauto^instance.field1 = 2
     assert value == 2
