@@ -1,0 +1,8 @@
+# Build artifacts
+nimcache/
+build/
+*.exe
+*.pdb
+
+# Test output
+testresults

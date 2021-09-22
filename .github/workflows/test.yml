@@ -1,0 +1,32 @@
+name: Testing
+
+on:
+  pull_request:
+    branches: [staging]
+    types: [opened, synchronize, edited]
+  push:
+    branches: [staging]
+
+concurrency:
+  group: testing-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  latest_commit:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup Nim compiler
+      uses: jiro4989/setup-nim-action@v1
+    - name: Cache nimcache
+      uses: actions/cache@v2
+      with:
+        path: "nimcache"
+        key: ${{ runner.os }}-nimcache-${{ github.ref }}-${{ github.sha }}-v1
+        restore-keys: |
+          ${{ runner.os }}-nimcache-${{ github.ref }}-${{ github.sha }}-
+          ${{ runner.os }}-nimcache-${{ github.ref }}-
+          ${{ runner.os }}-nimcache-refs/heads/staging-
+    - name: Run unit tests
+      run: testament pattern "tests/t*.nim"
