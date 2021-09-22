@@ -89,7 +89,7 @@ operation if both sides are C/C++ expressions:
 ```nim
 cexpr[cint]^instance1.field1 += cexpr[cint]^instance1.field1
 
-cexpr^!instance1.field1 += cexpr[cint]^!instance1.field1 # same as above
+cexpr^!instance1.field1 += cexpr[cint]^instance1.field1 # same as above
 
 cexpr^!instance1.field1 += cexpr^!instance1.field1 # same as above
 ```
