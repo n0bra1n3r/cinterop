@@ -68,7 +68,7 @@ and only needs to be used at the beginning. This means that types for members do
 not need to be declared, as long as the type of the variable whose members are
 accessed is known.
 
-Nim requires that the result of a function all with a return type must be used,
+Nim requires that the result of a function call with a return type must be used,
 so if the result of a method is to be discarded, one can use the `cexpr^`
 invocation, which is shorthand for `cexpr[void]^`:
 
