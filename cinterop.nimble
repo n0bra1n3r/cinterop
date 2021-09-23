@@ -1,6 +1,6 @@
 # Package
 
-version     = "0.1.2"
+version     = "0.1.3"
 author      = "n0bra1n3r"
 description = "A C/C++ interop library for the Nim programming language"
 license     = "MIT"
