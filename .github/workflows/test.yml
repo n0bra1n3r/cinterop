@@ -4,8 +4,15 @@ on:
   pull_request:
     branches: [staging]
     types: [opened, synchronize, edited]
+    - .github/workflows/test.yml
+    - src/**
+    - tests/**
   push:
     branches: [staging]
+    paths:
+    - .github/workflows/test.yml
+    - src/**
+    - tests/**
 
 concurrency:
   group: testing-${{ github.ref }}
