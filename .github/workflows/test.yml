@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [staging]
     types: [opened, synchronize, edited]
+    paths:
     - .github/workflows/test.yml
     - src/**
     - tests/**
