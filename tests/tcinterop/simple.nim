@@ -1,6 +1,7 @@
 import std/os
 
-import cinterop
+import cinterop/decls
+import cinterop/fieldaccessor
 
 const CurrentDir = currentSourcePath.parentDir
 
