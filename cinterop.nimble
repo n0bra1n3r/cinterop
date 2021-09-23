@@ -1,9 +1,9 @@
 # Package
 
-version     = "0.0.1"
-author      = "n0bra1n3r" 
+version     = "0.1.0"
+author      = "n0bra1n3r"
 description = "A C/C++ interop library for the Nim programming language"
-license     = "BSD"
+license     = "MIT"
 skipDirs    = @["docs", "tests"]
 srcDir      = "src"
 
