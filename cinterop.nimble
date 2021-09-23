@@ -6,7 +6,7 @@ description = "A C/C++ interop library for the Nim programming language"
 license     = "MIT"
 skipDirs    = @["docs", "tests"]
 srcDir      = "src"
-
+backend     = "cpp"
 
 # Deps
 
