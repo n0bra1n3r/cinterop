@@ -1,9 +1,9 @@
 import std/macros
 import std/strutils
 
-import ./pragmas
-import ./types
-import ./utils
+import ./private/pragmas
+import ./private/types
+import ./private/utils
 
 export CArray
 

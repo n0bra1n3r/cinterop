@@ -3,9 +3,9 @@ import std/os
 import std/strformat
 import std/strutils
 
-import ./pragmas
-import ./types
-import ./utils
+import ./private/pragmas
+import ./private/types
+import ./private/utils
 
 export CArray, CClass, CConst, CEnum, CRef, CString, cgen
 
