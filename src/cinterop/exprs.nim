@@ -5,7 +5,7 @@ import ./private/pragmas
 import ./private/types
 import ./private/utils
 
-export CArray
+export CArray, CConst, CRef, CString
 
 proc init*[T: CClass](Class: type[T]): T
   {.importcpp:"'*1(@)" varargs constructor.}
