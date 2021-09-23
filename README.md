@@ -94,6 +94,39 @@ cauto^instance1.field1 += cexpr[cint]^instance1.field1 # same as above
 cauto^instance1.field1 += cauto^instance1.field1 # same as above
 ```
 
+For libraries with lots of functions that don't hang off of classes, this could
+also be useful:
+
+```nim
+# glfw3.nim
+
+csource &"{GLFW}/glfw3.h": # header file
+  type cglfw* {.cgen:"(glfw$1(@))".} = object of CClass
+```
+
+```nim
+# canvas.nim
+...
+cauto^cglfw.GetMouseButton(self.window, button) == 1
+# generates something like `glfwGetMouseButton(self.window, button) == 1`
+...
+```
+
+`cglfw` here is a "namespace type" in Nim that is not visible in C++.
+The `cgen` pragma tells the compiler how `cglfw.field` and `CGLFW.FIELD` should
+be generated and has the same semantics as Nim's [`importcpp`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma)
+pragma.
+
+## Installing
+
+Thanks to @mantielero for adding initial support for nimble; the package can be
+installed by following the nimble instructions [here](https://github.com/nim-lang/nimble#nimble-install).
+
+## Usage
+
+Typical usage is to import `cinterop/decls` in modules that declare C/C++ types,
+and import `cinterop/exprs` to make use of them in other modules.
+
 ## Contributing
 
 This project is maintained during my free time, and serves as a tool for a game
