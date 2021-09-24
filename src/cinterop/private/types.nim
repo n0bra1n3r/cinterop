@@ -5,8 +5,8 @@ type CAuto* {.importcpp:"auto".} = object
 type CClass* {.cabstract.} = object
 type CEnum* {.cabstract.} = object
 
-type CObject* = CAuto | CClass
-type CAny* = CEnum | CObject
+type CObject* = CAuto or CClass
+type CAny* = CEnum or CObject
 
 type CArray*[T] = ptr[UncheckedArray[T]]
 type CConst*[T] {.importcpp:"const '0" bycopy.} = object
