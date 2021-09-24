@@ -5,19 +5,19 @@
 A C/C++ interop library for the [Nim](https://nim-lang.org/) programming
 language.
 
-This project was directly inspired by the [`nimline`](https://github.com/sinkingsugar/nimline)
+This project was directly inspired by the [nimline](https://github.com/sinkingsugar/nimline)
 library.
 
 ## Overview
 
-Similar to `nimline`, this library allows one to interop with C/C++ code without
-having to create wrappers. Unlike `nimline`, `cinterop` does not depend on Nim's
-experimental [`dotOperators`](https://nim-lang.org/docs/manual_experimental.html#special-operators)
-feature and relies only on Nim's macro system to generate code. This project
-depends only on Nim's standard library.
+Similar to nimline, this library allows one to interop with C/C++ code without
+having to create wrappers. Unlike nimline, cinterop does not depend on Nim's
+experimental [dotOperators](https://nim-lang.org/docs/manual_experimental.html#special-operators)
+feature and relies only on Nim's macro system to generate code.
 
 Features include:
 
+* No dependencies other than Nim's standard library.
 * Convenience macros to declare C/C++ types and functions ([decls.nim](src/cinterop/decls.nim)).
 * Conversion of a subset of Nim to its syntactical equivalent in C/C++ without
 requiring forward declarations ([exprs.nim](src/cinterop/exprs.nim)).
@@ -30,10 +30,19 @@ libraries, and is carefully designed so code can easily be migrated to use Nim's
 and [`importcpp`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma)
 pragmas directly.
 
+## Recommended compiler switches
+
+This project uses Nim's [ARC](https://nim-lang.org/blog/2020/10/15/introduction-to-arc-orc-in-nim.html)
+and C++17. It is well tested with non-trivial code using the Visual Studio
+compiler on Windows. The recommended compiler switches are indicated at the top
+of the main [test](tests/tcinterop.nim) file.
+
 ## Showcase
 
-Please [**see tests**](tests/tcinterop.nim) for examples of most features. This section provides an
-incomplete summary of the core functionality.
+Please **see [tests](tests/)** for examples of most features. This section
+provides an incomplete summary of the core functionality.
+
+### C++ Class interop
 
 Say you have the following C++ class:
 
@@ -57,6 +66,8 @@ You simply need to declare the C++ type and the source file it resides in:
 ```nim
 # simple.nim
 
+import cinterop/decls
+
 csource "simple.hpp":
   type CppClass1* = object of CClass
 ```
@@ -65,6 +76,8 @@ and then you can access the fields and methods of that type:
 
 ```nim
 # main.nim
+
+import cinterop/exprs
 
 var instance1 = CppClass1.init()
 
@@ -80,13 +93,16 @@ and only needs to be used at the beginning. This means that types for members do
 not need to be declared, as long as the type of the variable whose members are
 accessed is known.
 
-Nim requires that the result of a function call with a return type must be used,
-so if the result of a method is to be discarded, one can use the `cexpr^`
-invocation, which is shorthand for `cexpr[void]^`:
+### Void returns
+
+For expressions that evaluate to `void`, one can use the `cexpr^` invocation,
+which is shorthand for `cexpr[void]^`:
 
 ```nim
 cexpr^instance1.method1(0)
 ```
+
+### Type inference
 
 If the type of a return value does not need to be known but is used in an
 operation, one can use the `cauto^` invocation like so:
@@ -95,8 +111,11 @@ operation, one can use the `cauto^` invocation like so:
 cauto^instance1.field1 += 2
 ```
 
-To simplify the mechanics of `cexpr[T]^`, it is required on both sides of a
-binary operation if both sides are C/C++ expressions:
+### Binary operations
+
+A `cexpr[T]^` invocation can appear on either side of a binary operation.
+`cauto^` can only be used on the right-hand side unless the left-hand side is
+also a `cauto^` invocation. Examples:
 
 ```nim
 cexpr[cint]^instance1.field1 += cexpr[cint]^instance1.field1
@@ -105,6 +124,8 @@ cauto^instance1.field1 += cexpr[cint]^instance1.field1 # same as above
 
 cauto^instance1.field1 += cauto^instance1.field1 # same as above
 ```
+
+### Free function interop
 
 The following technique can be used for libraries with lots of functions that
 don't hang off of classes:
@@ -127,6 +148,23 @@ cauto^cglfw.GetMouseButton(self.window, button) == 1
 `cglfw` here serves as a namespace that is not visible in C++. The `cgen` pragma
 tells the compiler how `cglfw.GetMouseButton(self.window, button)` should be
 generated and has the same semantics as Nim's `importcpp` pragma.
+
+## Gotchas
+
+`cauto^` can be used on the left-hand side of an initialization, but doing so
+*may* cause backend compile errors:
+
+```nim
+let value = cauto^instance1.field1 # C++ backend may produce an error here
+```
+
+If this issue is encountered, the workaround is to explicitly specify the type:
+
+```nim
+let value = cexpr[cint]^instance1.field1
+```
+
+Other issues are documented in the tests.
 
 ## Installing
 
