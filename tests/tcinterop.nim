@@ -54,10 +54,10 @@ block: # perform binary operations with undeclared field and value
   assert cexpr[cint]^instance.field2 * 2 == 4
   assert cexpr[cint]^instance.field2 / 2 == 1
 
-  assert (1 + cexpr[cint]^instance.field2) == 3
-  assert (1 - cexpr[cint]^instance.field2) == -1
-  assert (2 * cexpr[cint]^instance.field2) == 4
-  assert (2 / cexpr[cint]^instance.field2) == 1
+  assert 1 + cexpr[cint]^instance.field2 == 3
+  assert 1 - cexpr[cint]^instance.field2 == -1
+  assert 2 * cexpr[cint]^instance.field2 == 4
+  assert 2 / cexpr[cint]^instance.field2 == 1
 
 block: # perform `+=` operation on undeclared field with value
   let instance = CppClass.init()
