@@ -251,7 +251,7 @@ should "allow storage of `auto` to temporary variable":
   let value = cauto^instance.field2
   assert value == 2
 
-should "should mutate `cref` variable":
+should "mutate `cref` variable":
   var instance = CppClass.init()
 
   let value {.cref.} = cauto^instance.field1
