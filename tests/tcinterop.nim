@@ -257,3 +257,9 @@ should "mutate `cref` variable":
   let value {.cref.} = cauto^instance.field1
   cauto^instance.field1 = 2
   assert value == 2
+
+should "have bitwise operators for enum flags":
+  assert ord(not (cauto^CPP_ENUM.MEMBER_1)) == -2
+  assert ord(cauto^CPP_ENUM.MEMBER_1 and cauto^CPP_ENUM.MEMBER_2) == 0
+  assert ord(cauto^CPP_ENUM.MEMBER_1 or cauto^CPP_ENUM.MEMBER_2) == 3
+  assert ord(not (cauto^CPP_ENUM.MEMBER_1) xor cauto^CPP_ENUM.MEMBER_2) == -4

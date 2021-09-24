@@ -375,3 +375,9 @@ proc `+`*(value: CObject): CAuto {.importcpp:"($1#)".}
 proc ord*(value: CEnum): cint {.importcpp:"(static_cast<'0>(#))".}
 
 proc `$`*[T: CEnum](value: T): string = $value.ord
+
+proc `and`*[T: CEnum](lhs, rhs: T): T {.importcpp:"(# & #)".}
+proc `or`*[T: CEnum](lhs, rhs: T): T {.importcpp:"(# | #)".}
+proc `xor`*[T: CEnum](lhs, rhs: T): T {.importcpp:"(# ^ #)".}
+
+proc `not`*[T: CEnum](value: T): T {.importcpp:"(~#)".}

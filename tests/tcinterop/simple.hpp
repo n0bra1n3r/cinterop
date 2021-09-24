@@ -1,5 +1,3 @@
-#pragma once
-
 namespace Simple
 {
 
@@ -49,7 +47,8 @@ public:
 
 enum CPP_ENUM
 {
-    CPP_ENUM_MEMBER_1 = 1
+    CPP_ENUM_MEMBER_1 = 1,
+    CPP_ENUM_MEMBER_2 = 2
 };
 
 inline int function1(CppClass instance)
