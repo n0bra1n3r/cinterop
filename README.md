@@ -1,26 +1,38 @@
 # cinterop
 
+![Testing](https://github.com/n0bra1n3r/cinterop/actions/workflows/test.yml/badge.svg)
+
 A C/C++ interop library for the [Nim](https://nim-lang.org/) programming
 language.
 
-Similar to the [`nimline`](https://github.com/sinkingsugar/nimline) library,
-this library allows one to interop with C/C++ code without having to generate
-wrappers with tools like [`nimterop`](https://github.com/nimterop/nimterop).
-Unlike `nimline`, `cinterop` does not depend on Nim's experimental
-[`dotOperators`](https://nim-lang.org/docs/manual_experimental.html#special-operators)
-feature and relies only on Nim's macro system to generate code.
+This project was directly inspired by the [`nimline`](https://github.com/sinkingsugar/nimline)
+library.
 
 ## Overview
 
-* Provides convenience macros to declare C/C++ types and functions
-(`decls.nim`).
-* Converts a subset of Nim to its syntactical equivalent in C/C++ without
-requiring forward declarations for all types and functions involved in the
-expression (`exprs.nim`).
+Similar to `nimline`, this library allows one to interop with C/C++ code without
+having to create wrappers. Unlike `nimline`, `cinterop` does not depend on Nim's
+experimental [`dotOperators`](https://nim-lang.org/docs/manual_experimental.html#special-operators)
+feature and relies only on Nim's macro system to generate code. This project
+depends only on Nim's standard library.
+
+Features include:
+
+* Convenience macros to declare C/C++ types and functions ([decls.nim](src/cinterop/decls.nim)).
+* Conversion of a subset of Nim to its syntactical equivalent in C/C++ without
+requiring forward declarations ([exprs.nim](src/cinterop/exprs.nim)).
+
+This project **is not** a replacement for hand-written wrappers or wrapper
+generators like [c2nim](https://github.com/nim-lang/c2nim). This library is
+useful for **quickly prototyping** new code that depend on large C/C++
+libraries, and is carefully designed so code can easily be migrated to use Nim's
+[`header`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-header-pragma)
+and [`importcpp`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma)
+pragmas directly.
 
 ## Showcase
 
-**See tests** for examples of most features. This section provides an
+Please [**see tests**](tests/tcinterop.nim) for examples of most features. This section provides an
 incomplete summary of the core functionality.
 
 Say you have the following C++ class:
@@ -94,8 +106,8 @@ cauto^instance1.field1 += cexpr[cint]^instance1.field1 # same as above
 cauto^instance1.field1 += cauto^instance1.field1 # same as above
 ```
 
-For libraries with lots of functions that don't hang off of classes, this could
-also be useful:
+The following technique can be used for libraries with lots of functions that
+don't hang off of classes:
 
 ```nim
 # glfw3.nim
@@ -112,26 +124,26 @@ cauto^cglfw.GetMouseButton(self.window, button) == 1
 ...
 ```
 
-`cglfw` here is a "namespace type" in Nim that is not visible in C++.
-The `cgen` pragma tells the compiler how `cglfw.field` and `CGLFW.FIELD` should
-be generated and has the same semantics as Nim's [`importcpp`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma)
-pragma.
+`cglfw` here serves as a namespace that is not visible in C++. The `cgen` pragma
+tells the compiler how `cglfw.GetMouseButton(self.window, button)` should be
+generated and has the same semantics as Nim's `importcpp` pragma.
 
 ## Installing
 
-Thanks to @mantielero for adding initial support for nimble; the package can be
+Thanks to @mantielero for adding initial support for nimble! The package can be
 installed by following the nimble instructions [here](https://github.com/nim-lang/nimble#nimble-install).
 
 ## Usage
 
 Typical usage is to import `cinterop/decls` in modules that declare C/C++ types,
-and import `cinterop/exprs` to make use of them in other modules.
+and to import those modules along with `cinterop/exprs` to make use of them in
+other modules.
 
 ## Contributing
 
 This project is maintained during my free time, and serves as a tool for a game
-engine I am writing after work hours. Contributions are welcome, and will
+engine I am writing after work hours. Contributions are welcome, and I will
 merge them immediately if they serve to keep the project robust, simple, and
 maintainable.
 
-Cheers and happy coding! 🍺
+**Cheers and happy coding!** 🍺
