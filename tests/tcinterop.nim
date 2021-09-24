@@ -9,9 +9,9 @@ import ./tcinterop/simple
 
 import cinterop/exprs
 
-template should(test: static[string], body: untyped) =
-  proc run() {.genSym.} = body
-  run()
+template should(description: static[string], body: untyped) =
+  proc test() {.genSym.} = body
+  test()
 
 should "access value macro":
   assert DEFINE1 == 1
