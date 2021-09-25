@@ -257,16 +257,17 @@ macro warnCExpr(res: typed) =
   warning("did not generate C/C++ expression; " &
     "you may not need `cexpr` here", searchNodeKind(res, nnkSym))
 
-template toResult[T](res: T): auto = res
-# always return the enum type for CEnums
-template toResult[T](res: CEnum): auto = res
+template toResult[T](Any: type[T], res: T): auto = res
+# return the enum type if `CAuto` is specified as the result type
+template toResult[T: CAuto](Auto: type[T], res: CEnum): auto = res
+proc toResult[T: SomeInteger](Int: type[T], res: CEnum): T {.importcpp:"(#)".}
 
 template cResult[T](Any: type[T], res: auto): auto =
   when not isCCall(res):
     warnCExpr(res)
   # required to avoid AST nodes for implicit conversions (e.g. nnkHiddenConv)
   # from interfering with the `isCCall` logic
-  toResult[T](res)
+  toResult(Any, res)
 
 proc genCExpr(code, returnType, CAuto: NimNode; isResult = false): NimNode =
   case code.kind
