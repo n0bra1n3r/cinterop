@@ -25,8 +25,8 @@ requiring forward declarations ([exprs.nim](src/cinterop/exprs.nim)).
 This project **is not** a replacement for hand-written wrappers or wrapper
 generators like [c2nim](https://github.com/nim-lang/c2nim). This library is
 useful for **quickly prototyping** new code that depend on large C/C++
-libraries, and is carefully designed so code can easily be migrated to use Nim's
-[`header`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-header-pragma)
+libraries, and is carefully designed so code can progressively be migrated to
+use Nim's [`header`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-header-pragma)
 and [`importcpp`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma)
 pragmas directly.
 
@@ -151,8 +151,31 @@ generated and has the same semantics as Nim's `importcpp` pragma.
 
 ## Gotchas
 
+### Unary operations
+
+Unary operators cannot be used with `cexpr[T]^` and `cauto^` invocations
+without using parentheses:
+
+```nim
+# echo -cauto^instance1.field1 # error
+
+echo -(cauto^instance1.field1) # compiles
+```
+
+There is a [proposal](https://github.com/nim-lang/RFCs/issues/415) to allow the
+following syntax to avoid the above issue and enable a more natural
+implementation of `cexpr[T]^`:
+
+```nim
+echo -(cauto)instance1.field1
+
+echo -(cexpr[cint])instance1.field1
+```
+
+### Initialization
+
 `cauto^` can be used on the left-hand side of an initialization, but doing so
-*may* cause backend compile errors:
+may cause backend compile errors, especially if done at the global scope:
 
 ```nim
 let value = cauto^instance1.field1 # C++ backend may produce an error here
