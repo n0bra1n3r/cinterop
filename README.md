@@ -24,7 +24,7 @@ requiring forward declarations ([exprs.nim](src/cinterop/exprs.nim)).
 
 This project **is not** a replacement for hand-written wrappers or wrapper
 generators like [c2nim](https://github.com/nim-lang/c2nim). This library is
-useful for **quickly prototyping** new code that depend on large C/C++
+useful for **quickly prototyping** new code that depends on large C/C++
 libraries, and is carefully designed so code can progressively be migrated to
 use Nim's [`header`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-header-pragma)
 and [`importcpp`](https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma)
@@ -162,15 +162,8 @@ without using parentheses:
 echo -(cauto^instance1.field1) # compiles
 ```
 
-There is a [proposal](https://github.com/nim-lang/RFCs/issues/415) to allow the
-following syntax to avoid the above issue and enable a more natural
-implementation of `cexpr[T]^`:
-
-```nim
-echo -(cauto)instance1.field1
-
-echo -(cexpr[cint])instance1.field1
-```
+There is a [proposal](https://github.com/nim-lang/RFCs/issues/415) to avoid this
+issue and enable a more natural implementation of `cexpr[T]^`.
 
 ### Initialization
 
@@ -191,8 +184,9 @@ Other issues are documented in the tests.
 
 ## Installing
 
-Thanks to @mantielero for adding initial support for nimble! The package can be
-installed by following the nimble instructions [here](https://github.com/nim-lang/nimble#nimble-install).
+Thanks to [@mantielero](https://github.com/mantielero) for adding initial
+support for nimble! The package can be installed by following the nimble
+instructions [here](https://github.com/nim-lang/nimble#nimble-install).
 
 ## Usage
 
