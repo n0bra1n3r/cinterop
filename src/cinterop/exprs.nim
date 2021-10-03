@@ -25,7 +25,7 @@ macro errorConstruct(ctor: CClass{nkObjConstr}) =
 
 macro errorConstruct(sym: typed) =
   error("this code is incompatible with term-rewriting macros; " &
-    "disable init check for C/C++ interop or refactor this code", sym)
+    "set `CINTEROP_DISABLE_INIT_CHECK` or refactor this code", sym)
 
 when not defined(CINTEROP_DISABLE_INIT_CHECK):
   # disallow normal constructors to avoid backend compile errors
@@ -78,8 +78,9 @@ macro getTypeCGenCodeString(Type: type): string =
     let pragma = Type.getImpl[0][1]
     let pragmaIndex = pragma.pragmaNodeIndexOf"cgen"
     let pragmaNode = pragma[pragmaIndex]
-    warning("may not generate correct C++ code; " &
-      "consider prepending \"'*1\" to specify scope", pragmaNode)
+    warning("directive may not generate correct C++ code; " &
+      "prepend \"'*1::\" to specify scope or enclose " &
+      "in parentheses to ignore this warning", pragmaNode)
 
 # `'1` forces `#include` to always be generated for the first parameter of a
 # cinterop-generated proc
