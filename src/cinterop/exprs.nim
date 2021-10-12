@@ -66,7 +66,7 @@ macro getPragmaContainerType(Type: type): type =
   result = Type
   if result.kind != nnkSym:
     if result.typeKind == ntyTypeDesc and
-        result.kind != nnkStmtListType:
+        result.kind notin {nnkStmtListExpr, nnkStmtListType}:
       result = result[1].getTypeInst
       result = getAst getPragmaContainerType(result)
     else:
