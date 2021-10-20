@@ -97,6 +97,9 @@ template getCCode[T](base: T, default: string): string =
 
 type CAccessKind = enum Val, Var
 
+template cArg(arg: string): auto = cstring(arg)
+template cArg(arg: auto): auto = arg
+
 macro cAccess(
         ccode: static[string],
         accessKind: static[CAccessKind],
@@ -128,7 +131,7 @@ macro cAccess(
     of Var: getAst varFieldAst(ccode, base, field, returnType)
 
   let call = newCall(field, base)
-  for arg in args: call.add(arg)
+  for arg in args: call.add(newCall(bindSym"cArg", arg))
 
   result = newStmtList(cgen, call)
 
