@@ -46,18 +46,18 @@ converter toCAuto*(value: string): CAuto
   result = impl(value)
 
 converter toCConst*[T: not string](value: T): CConst[T] {.importcpp:"(#)".}
-converter toCConst*(value: string): CConst[string] {.inline noinit.} =
+converter toCConst*(value: string): CConst[string] {.inline.} =
   proc impl(): CConst[string]
     {.importcpp:"(#)" varargs.}
   result = impl(value)
 
-converter toCString*(value: string): CString {.inline noinit.} =
+converter toCString*(value: string): CString {.inline.} =
   proc impl(): CString
     {.importcpp:"(#)" varargs.}
   result = impl(value)
 
 converter toCRef*[T: not string](value: T): CRef[T] {.importcpp:"(#)".}
-converter toCRef*(value: string): CRef[string] {.inline noinit.} =
+converter toCRef*(value: string): CRef[string] {.inline.} =
   proc impl(): CRef[string]
     {.importcpp:"(#)" varargs.}
   result = impl(value)

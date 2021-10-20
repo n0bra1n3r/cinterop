@@ -24,7 +24,7 @@ macro cfield*(def: untyped{nkProcDef}) =
     {.emit:["/*TYPESECTION*/\n",
       "template class MakeProxy<", W, ", &", B, "::", astToStr(field), ">;"].}
 
-    proc field*(self: B): auto {.cdecl noinit.} =
+    proc field*(self: B): auto {.cdecl.} =
       proc impl(Wrapper: type[W], self: auto): Ret
         {.importcpp:"(@.*(Proxy<'*1, '*1>::value))".}
 
