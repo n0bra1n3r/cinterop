@@ -133,7 +133,10 @@ macro cAccess(
   let call = newCall(field, base)
   for arg in args: call.add(newCall(bindSym"cArg", arg))
 
-  result = newStmtList(cgen, call)
+  template callAst(call) =
+    {.line.}: call
+
+  result = newStmtList(cgen, getAst callAst(call))
 
 template isCallable(base, field: untyped, args: varargs[untyped]): bool =
   when declared(field):
