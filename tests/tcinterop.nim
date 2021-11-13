@@ -9,7 +9,7 @@ import ./tcinterop/simple
 
 import cinterop/exprs
 
-template should(description: static[string], body: untyped) =
+template should(description: static string, body: untyped) =
   proc test() {.genSym.} = body
   test()
 

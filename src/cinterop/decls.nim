@@ -7,7 +7,13 @@ import ./private/pragmas
 import ./private/types
 import ./private/utils
 
-export CArray, CClass, CConst, CEnum, CRef, CString, cgen
+export CArray
+export CClass
+export CConst
+export CEnum
+export CRef
+export CString
+export cgen
 
 proc errorCDecl(sym: NimNode) {.compileTime.} =
   error("invalid C/C++ declaration: " & sym.repr, sym)
@@ -41,7 +47,7 @@ proc genDecl[T](
 
     result.add(node)
 
-macro concatHeaderStrings(str1, str2: static[string]): string =
+macro concatHeaderStrings(str1, str2: static string): string =
   let str1 = if not str1.startsWith("<"):
       "#include \"" & str1 & "\""
     else:
@@ -67,7 +73,7 @@ proc applyHeaderPragmaNode(pragma: NimNode, path: string) =
   else:
     addPathToHeaderNode(pragma[headerIdx], path)
 
-macro concatImportStrings(str1, str2: static[string]): string =
+macro concatImportStrings(str1, str2: static string): string =
   if not str2.startsWith('('):
     # add scope iff C code is not parenthesized
     var importParts = split(str2, "::")
@@ -116,7 +122,7 @@ proc applyImportPragmaNode(pragma, node: NimNode; cscope = "") =
 
   addScopeToPragmaNode(pragmaNode, cscope)
 
-macro csource*(path: static[string], code: untyped{nkStmtList}) =
+macro csource*(path: static string, code: untyped{nkStmtList}) =
   genDecl(code, path, ["cnamespace", "cscope"]) do (
       node, pragma: NimNode,
       path: string) -> void:
