@@ -149,6 +149,26 @@ cauto^cglfw.GetMouseButton(self.window, button) == 1
 tells the compiler how `cglfw.GetMouseButton(self.window, button)` should be
 generated and has the same semantics as Nim's `importcpp` pragma.
 
+### Enums
+
+For working with C/C++ enums, one can use the `cenum` pragma like so:
+
+```nim
+type CPP_ENUM* {.cenum.} = object
+```
+
+Although enums can be emulated using `CClass` and static methods, `cenum`
+provides better checking of enum semantics and produces better C/C++ code for
+enums. By default, enum field access results in an expansion similar to the
+following:
+
+```nim
+let enumValue = cauto^CPP_ENUM.MEMBER_1
+# generates `CPP_ENUM enumValue = CPP_ENUM_MEMBER_1`
+```
+
+Custom code generation for enums can be achieved using `cgen` as well.
+
 ## Gotchas
 
 ### Unary operations
