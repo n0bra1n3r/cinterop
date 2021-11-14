@@ -10,9 +10,9 @@ import ./private/utils
 export CArray
 export CClass
 export CConst
-export CEnum
 export CRef
 export CString
+export cenum
 export cgen
 
 proc errorCDecl(sym: NimNode) {.compileTime.} =
