@@ -16,7 +16,7 @@ csource CurrentDir & "/simple.hpp":
     cscope CppClass:
       type CppNestedClass* = object of CClass
 
-    type CPP_ENUM* {.cgen:"'*1_$1".} = object of CEnum
+    type CPP_ENUM* {.cenum cgen:"'*1_$1".} = object
 
     proc method1*(self: CppClass, arg: cint): cint
     converter method3*(self: CppClass): cint
