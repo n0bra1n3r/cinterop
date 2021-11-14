@@ -18,7 +18,8 @@ macro cenum*(def: untyped{nkTypeDef}) =
           name.repr & " cannot inherit", name)
   if def[^1][^1].kind == nnkRecList:
     error("invalid C/C++ declaration: " &
-          name.repr & " cannot contain fields", name)
+          name.repr & " cannot contain fields; " &
+          "use procs to define enum fields", name)
 
   result = def
 
