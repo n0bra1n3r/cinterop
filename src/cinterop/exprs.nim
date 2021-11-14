@@ -5,7 +5,10 @@ import ./private/pragmas
 import ./private/types
 import ./private/utils
 
-export CArray, CConst, CRef, CString
+export CArray
+export CConst
+export CRef
+export CString
 
 proc init*[T: CClass](Class: type[T]): T
   {.importcpp:"'*1(@)" varargs constructor.}
@@ -62,16 +65,6 @@ converter toCRef*(value: string): CRef[string] {.inline.} =
     {.importcpp:"(#)" varargs.}
   result = impl(value)
 
-macro getPragmaContainerType(Type: type): type =
-  result = Type
-  if result.kind != nnkSym:
-    if result.typeKind == ntyTypeDesc and
-        result.kind notin {nnkStmtListExpr, nnkStmtListType}:
-      result = result[1].getTypeInst
-      result = getAst getPragmaContainerType(result)
-    else:
-      result = result[0]
-
 macro getTypeCGenCodeString(Type: type): string =
   result = getAst getCustomPragmaVal(Type, cgen)
   if not startsWith($result, '(') and not startsWith($result, "\'*1"):
@@ -97,12 +90,9 @@ template getCCode[T](base: T, default: string): string =
 
 type CAccessKind = enum Val, Var
 
-template cArg(arg: string): auto = cstring(arg)
-template cArg(arg: auto): auto = arg
-
 macro cAccess(
-        ccode: static[string],
-        accessKind: static[CAccessKind],
+        ccode: static string,
+        accessKind: static CAccessKind,
         base: auto or type,
         field: untyped,
         Any: type,
@@ -130,6 +120,9 @@ macro cAccess(
     of Val: getAst valFieldAst(ccode, base, field, returnType)
     of Var: getAst varFieldAst(ccode, base, field, returnType)
 
+  template cArg(arg: string): auto = cstring(arg)
+  template cArg(arg: auto): auto = arg
+
   let call = newCall(field, base)
   for arg in args: call.add(newCall(bindSym"cArg", arg))
 
@@ -137,23 +130,6 @@ macro cAccess(
     {.line.}: call
 
   result = newStmtList(cgen, getAst callAst(call))
-
-template isCallable(base, field: untyped, args: varargs[untyped]): bool =
-  when declared(field):
-    # TODO: Avoid using `compiles`
-    when varargsLen(args) > 0:
-      compiles(field(base, args))
-    else:
-      compiles(field(base))
-  else:
-    false
-
-macro hasField(base: CObject, field: untyped): bool =
-  result = newLit false
-  for fieldNode in base.getTypeImpl[2]:
-    if fieldNode[0].eqIdent(field):
-      result = newLit true
-      break
 
 template isVar(base: var auto): bool = true
 template isVar(base: auto or type): bool = false
@@ -251,15 +227,6 @@ macro isCCall(node: typed): bool =
       else:
         result = newLit startsWith($node[1], cgenCodeTag)
 
-proc searchNodeKind(node: NimNode, kind: NimNodeKind): NimNode =
-  if node.kind == kind:
-    result = node
-  elif node.kind notin AtomicNodes:
-    for child in node:
-      result = searchNodeKind(child, kind)
-      if result != nil:
-        break
-
 macro warnCExpr(res: typed) =
   warning("did not generate C/C++ expression; " &
     "you may not need `cexpr` here", searchNodeKind(res, nnkSym))
@@ -296,7 +263,7 @@ proc genCExpr(code, returnType, CAuto: NimNode; isResult = false): NimNode =
     elif node.eqIdent("[]"):
       result = newCall(bindSym"derefImpl", returnType)
     else:
-      result = newCall(node)
+      result = newCall node
 
     if code.len > 1:
       for arg in code[1..^1]:
@@ -333,7 +300,7 @@ template `^`*(Expr: type[cexpr], code: untyped{~nkStmtList}): auto =
   when cexpr is Expr:
     cexprImpl(code, void)
   else:
-    type Type = cexprType(Expr)
+    type Type = cexprType Expr
 
     when Type is (float or int):
       checkTypeSize(Expr, Type)
