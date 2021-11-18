@@ -187,7 +187,7 @@ issue and enable a more natural implementation of `cexpr[T]^`.
 
 ### Initialization
 
-`cauto^` can be used on the left-hand side of an initialization, but doing so
+`cauto^` can be used on the right-hand side of an initialization, but doing so
 may cause backend compile errors, especially if done at the global scope:
 
 ```nim
