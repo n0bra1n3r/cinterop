@@ -30,7 +30,7 @@ macro errorConstruct(sym: typed) =
   error("this code is incompatible with term-rewriting macros; " &
     "set `CINTEROP_DISABLE_INIT_CHECK` or refactor this code", sym)
 
-when not defined(CINTEROP_DISABLE_INIT_CHECK):
+when not defined CINTEROP_DISABLE_INIT_CHECK:
   # disallow normal constructors to avoid backend compile errors
   # BUG: These TRMs match `{.emit:"".}`; `{.emit:[].}` must be used instead
   template initCheck*{ctor}(ctor: CClass{nkObjConstr}) = errorConstruct(ctor)

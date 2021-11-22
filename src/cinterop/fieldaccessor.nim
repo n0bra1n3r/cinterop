@@ -15,7 +15,7 @@ macro cfield*(def: untyped{nkProcDef}) =
     type B = firstParamType(decl)
     type W = MemberWrapper[B, Ret]
 
-    when not declared(IsMemberAccessorImplEmitted):
+    when not declared IsMemberAccessorImplEmitted:
       const IsMemberAccessorImplEmitted {.inject used.} = true
 
       {.emit:["/*TYPESECTION*/\n",

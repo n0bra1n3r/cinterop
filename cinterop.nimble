@@ -8,6 +8,6 @@ skipDirs    = @["docs", "tests"]
 srcDir      = "src"
 backend     = "cpp"
 
-# Deps
+# Dependencies
 
 requires "nim >= 1.4.8"

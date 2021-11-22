@@ -30,12 +30,12 @@ macro hasField*(base: typed, field: untyped): bool =
       break
 
 template isCallable*(base, field: untyped, args: varargs[untyped]): bool =
-  when declared(field):
+  when declared field:
     # TODO: Avoid using `compiles`
     when varargsLen(args) > 0:
-      compiles(field(base, args))
+      compiles field(base, args)
     else:
-      compiles(field(base))
+      compiles field(base)
   else:
     false
 
