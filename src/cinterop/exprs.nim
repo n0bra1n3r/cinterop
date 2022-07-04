@@ -22,7 +22,7 @@ proc cnew*(T: type): ptr[T] {.importcpp:"(('0) ::operator new (sizeof('*1)))".}
 
 proc cdelete*(pt: ptr) {.importcpp:"(delete #)".}
 
-proc ccreate*(T: type): ptr[T] {.importcpp:"(('0)malloc(sizeof('*1)))" header:"<stdlib.h>".}
+proc ccreate*(T: type): ptr[T] {.importcpp:"(('0)calloc(1, sizeof('*1)))" header:"<stdlib.h>".}
 
 proc cdealloc*(pt: ptr|pointer) {.importcpp:"free(#)" header:"<stdlib.h>".}
 
