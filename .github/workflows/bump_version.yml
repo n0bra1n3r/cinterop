@@ -15,7 +15,7 @@ on:
     types: [closed]
 
 jobs:
-  with-workflow:
+  with_workflow:
     uses: n0bra1n3r/github-workflows/.github/workflows/bump_version.yml@staging
     secrets:
       ACCESS_TOKEN: ${{ secrets.MASTER_PAT }}
