@@ -17,6 +17,8 @@ on:
 jobs:
   with_workflow:
     uses: n0bra1n3r/github-workflows/.github/workflows/bump_version.yml@staging
+    with:
+      type: ${{ inputs.type }}
     secrets:
       ACCESS_TOKEN: ${{ secrets.MASTER_PAT }}
       GIT_AUTHOR_NAME: ${{ secrets.DEFAULT_GIT_AUTHOR_NAME }}
