@@ -5,11 +5,12 @@ on:
     inputs:
       type:
         description: "Bump type"
-        required: false
+        required: true
         type: choice
         options:
         - patch
         - minor
+        default: all
   pull_request:
     branches: [staging]
     types: [closed]
