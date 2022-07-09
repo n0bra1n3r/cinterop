@@ -16,7 +16,7 @@ on:
 
 jobs:
   with-workflow:
-    uses: n0bra1n3r/github-workflows/bump_version.yml@staging
+    uses: n0bra1n3r/github-workflows/.github/workflows/bump_version.yml@staging
     secrets:
       GITHUB_TOKEN: ${{ secrets.MASTER_PAT }}
       GIT_AUTHOR_NAME: ${{ secrets.DEFAULT_GIT_AUTHOR_NAME }}
