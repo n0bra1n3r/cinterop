@@ -4,11 +4,9 @@ import std/strutils
 import ./private/pragmas
 import ./private/types
 import ./private/utils
+import ./ctypes
 
-export CArray
-export CConst
-export CRef
-export CString
+export ctypes
 
 proc init*[T: CClass](Class: type[T]): T
   {.importcpp:"'*1(@)" varargs constructor.}
@@ -315,40 +313,6 @@ template `^`*(Expr: type[cexpr], code: untyped{~nkStmtList}): auto =
 
 template `^`*(Expr: type[cauto], code: untyped{~nkStmtList}): auto =
   cexprImpl(code, CAuto)
-
-when (NimMajor, NimMinor, NimPatch) < (1, 7, 1):
-  # BUG: This macro does not allow `var` variables to be mutated
-  # TODO: Remove this when https://github.com/nim-lang/RFCs/issues/220 is in stable
-  macro cref*(name: untyped{nkIdent|nkAccQuoted}, Type, value: untyped) =
-    if value.kind == nnkEmpty:
-      error("C/C++ forwarding reference must be initialized", name)
-
-    template variableAst(name, value) =
-      let name {.codegenDecl:"const $#& $#".} = value
-
-    template variableAst(name, Type, value) =
-      let name {.codegenDecl:"const $#& $#".}: Type = value
-
-    result = if Type.kind == nnkNilLit:
-        getAst variableAst(name, value)
-      else:
-        getAst variableAst(name, Type, value)
-else:
-  macro cref*(def: untyped{nkLetSection|nkVarSection}) =
-    result = def
-
-    let code = if def.kind == nnkLetSection:
-        "const $#& $#"
-      else:
-        "$#& $#"
-
-    let pragma = newColonExpr(ident"codegenDecl", newLit code)
-
-    let pragmaExprOrIdent = result[0][0]
-    if pragmaExprOrIdent.kind == nnkPragmaExpr:
-      pragmaExprOrIdent[1].add pragma
-    else:
-      result[0][0] = nnkPragmaExpr.newTree(pragmaExprOrIdent, nnkPragma.newTree pragma)
 
 proc `==`*(lhs, rhs: CAny): bool {.importcpp:"(# $1 #)".}
 proc `!=`*(lhs, rhs: CAny): bool {.importcpp:"(# $1 #)".}
