@@ -11,8 +11,3 @@ else:
 
 type CObject* = CAuto or CClass
 type CAny* = CEnum or CObject
-
-type CArray*[T] = ptr[UncheckedArray[T]]
-type CConst*[T] {.importcpp:"const '0" bycopy.} = object
-type CRef*[T] {.importcpp:"'0&" bycopy.} = object
-type CString* = CConst[CArray[char]]

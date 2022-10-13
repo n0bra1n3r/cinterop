@@ -6,14 +6,11 @@ import std/strutils
 import ./private/pragmas
 import ./private/types
 import ./private/utils
+import ./ctypes
 
-export CArray
 export CClass
-export CConst
-export CRef
-export CString
-export cenum
-export cgen
+export ctypes except cref
+export pragmas
 
 proc errorCDecl(sym: NimNode) {.compileTime.} =
   error("invalid C/C++ declaration: " & sym.repr, sym)
