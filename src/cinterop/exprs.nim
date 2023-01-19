@@ -24,7 +24,7 @@ proc ccreate*(T: type): ptr[T] {.importcpp:"(('0)calloc(1, sizeof('*1)))" header
 
 proc cdealloc*(pt: ptr|pointer) {.importcpp:"free(#)" header:"<stdlib.h>".}
 
-proc cdestroy*(instance: var auto) {.importcpp:"#.~'*1()".}
+proc cdestroy*(instance: var auto) {.importcpp:"#.std::remove_cv<'*1>::type::~type()".}
 
 macro errorConstruct(ctor: CClass{nkObjConstr}) =
   error("invalid C/C++ object construction; use `" &
