@@ -7,7 +7,7 @@ target: "c++"
 import ./tcinterop/contained
 import ./tcinterop/simple
 
-import cinterop/exprs
+import cinterop/[exprs, pragmas]
 
 template should(description: static string, body: untyped) =
   proc test() {.genSym.} = body
