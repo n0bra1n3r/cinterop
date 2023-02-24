@@ -20,9 +20,9 @@ macro cref*(def: untyped{nkLetSection|nkVarSection}) =
     result[0][0] = nnkPragmaExpr.newTree(pragmaExprOrIdent, nnkPragma.newTree pragma)
 
   proc constToNim[T](obj: CConst[T]): T {.importcpp:"(#)".}
-  proc constToNim[T](obj: CConst[CRef[T]]): T {.importcpp:"(#)".}
   template constToNim[T](obj: T): T = obj
   proc refToNim[T](obj: CRef[T]): T {.importcpp:"(#)".}
+  proc refToNim[T](obj: CRef[CConst[T]]): T {.importcpp:"(#)".}
   template refToNim[T](obj: T): T = obj
 
   if def.kind == nnkLetSection:

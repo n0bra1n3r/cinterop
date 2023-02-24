@@ -52,14 +52,14 @@ converter toCAuto*(value: string): CAuto
   # required for implicit conversion from Nim strings to C strings
   result = impl(value)
 
-converter toCConst*[T: not string](value: T): CConst[T] {.importcpp:"(#)".}
+converter toCConst*[T](value: T): CConst[T] {.importcpp:"(#)".}
 
 converter toCString*(value: string): CString {.inline.} =
   proc impl(): CString
     {.importcpp:"(#)" varargs.}
   result = impl(value)
 
-converter toCRef*[T: not string](value: T): CRef[T] {.importcpp:"(#)".}
+converter toCRef*[T](value: T): CRef[T] {.importcpp:"(#)".}
 
 macro getTypeCGenCodeString(Type: type): string =
   result = getAst getCustomPragmaVal(Type, cgen)
