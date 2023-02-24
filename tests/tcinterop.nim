@@ -209,6 +209,7 @@ should "access private field":
 
 should "access member of an enum":
   doAssert ord(cauto^CPP_ENUM.MEMBER_1) == 1
+  doAssert cexpr[cint]^CPP_ENUM.MEMBER_1 == 1
 
 should "new and delete class instance":
   let newInstance = cnew CppClass.init()
@@ -251,12 +252,13 @@ should "allow storage of `auto` to temporary variable":
   let value = cauto^instance.field2
   doAssert value == 2
 
-should "mutate `cref` variable":
-  var instance = CppClass.init()
+when (NimMajor, NimMinor, NimPatch) >= (1, 7, 1):
+  should "mutate `cref` variable":
+    var instance = CppClass.init()
 
-  let value {.cref.} = cauto^instance.field1
-  cauto^instance.field1 = 2
-  doAssert value == 2
+    let value {.cref.} = cauto^instance.field1
+    cauto^instance.field1 = 2
+    doAssert value == 2
 
 should "have bitwise operators for enum flags":
   doAssert ord(not (cauto^CPP_ENUM.MEMBER_1)) == -2
