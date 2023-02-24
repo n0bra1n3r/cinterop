@@ -230,7 +230,7 @@ macro warnCExpr(res: typed) =
 template toResult[T](Any: type[T], res: T): auto = res
 # return the enum type if `CAuto` is specified as the result type
 template toResult[T: CAuto](Auto: type[T], res: CEnum): auto = res
-proc toResult[T: SomeInteger](Int: type[T], res: CEnum): T {.importcpp:"(#)".}
+proc toResult[T: SomeInteger](Int: type[T], res: CEnum): T {.importcpp:"(@)".}
 
 template cResult[T](Any: type[T], res: auto): auto =
   when not isCCall(res):
